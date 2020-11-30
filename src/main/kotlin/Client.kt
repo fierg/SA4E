@@ -3,6 +3,7 @@ import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import java.lang.Thread.sleep
 import java.net.InetSocketAddress
 
 fun main(args: Array<String>) {
@@ -11,10 +12,19 @@ fun main(args: Array<String>) {
         val input = socket.openReadChannel()
         val output = socket.openWriteChannel(autoFlush = true)
 
-        output.writeStringUtf8("hello\r\n")
-        val response = input.readUTF8Line()
+
+        output.writeStringUtf8("(\"count\",1,500)\r\n")
+        sleep(3000)
+
+        var response = input.readUTF8Line()
         println("Server said: '$response'")
 
-        socket.close()
+        sleep(3000)
+
+        response = input.readUTF8Line()
+        println("Server said: '$response'")
+
+
+        //socket.close()
     }
 }
