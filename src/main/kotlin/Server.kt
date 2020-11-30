@@ -14,8 +14,11 @@ import java.util.concurrent.Executors
 fun main(args: Array<String>) {
     runBlocking {
         val exec = Executors.newCachedThreadPool()
-        val parserRegex = Regex("\\(\\\"count\\\",(\\d+),(\\d+)\\)")
-        val server = aSocket(ActorSelectorManager(exec.asCoroutineDispatcher())).tcp().bind(InetSocketAddress("127.0.0.1", 2323))
+        val jobs = mutableSetOf<JobStat>()
+        val RGX_JOB = Regex("\\(\\\"count\\\",(\\d+),(\\d+)\\)")
+        val RGX_STAT = Regex("\\(\\\"stats\\\"\\)")
+        val server =
+            aSocket(ActorSelectorManager(exec.asCoroutineDispatcher())).tcp().bind(InetSocketAddress("127.0.0.1", 2323))
         println("Started echo tcp server at ${server.localAddress}")
 
         while (true) {
@@ -33,13 +36,20 @@ fun main(args: Array<String>) {
                         println("${socket.remoteAddress}: $line")
                         //output.writeStringUtf8("$line\r\n")
 
-                        if (parserRegex.matches(line.toString())) {
-                            val groups = parserRegex.find(line.toString())!!.groupValues
+                        if (RGX_JOB.matches(line.toString())) {
+                            val groups = RGX_JOB.find(line.toString())!!.groupValues
                             output.writeStringUtf8("Calculating primes in range ${groups[1]} to ${groups[2]}...\r\n")
+                            val startTime = System.nanoTime();
                             val primes = getPrimesInRange(groups[1].toInt(), groups[2].toInt())
-                            output.writeStringUtf8("${primes}\r\n")
-                        }
+                            val endTime = System.nanoTime();
 
+                            output.writeStringUtf8("${primes}\r\n")
+                            jobs.add(JobStat(groups[1].toInt(), groups[2].toInt(), primes, (endTime - startTime)))
+                        } else if (RGX_STAT.matches(line.toString())){
+                            jobs.forEach { 
+                                output.writeStringUtf8(it.toString())
+                            }
+                        }
                     }
                 } catch (e: Throwable) {
                     e.printStackTrace()
