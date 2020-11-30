@@ -22,7 +22,21 @@ public class Client {
             int low = 2;
             int high = 14;
             int response2 = stub.count(low, high);
+
             System.out.println("Primes: " + response2);
+            response2 = stub.count(1, 500);
+
+            System.out.println("Primes: " + response2);
+            response2 = stub.count(500, 10000);
+
+            System.out.println("Primes: " + response2);
+            response2 = stub.count(10000, 100000);
+            System.out.println("Primes: " + response2);
+            response2 = stub.count(100000, 500000);
+            System.out.println("Primes: " + response2);
+
+            stub.stats();
+
 
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
