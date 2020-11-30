@@ -51,10 +51,10 @@ fun main(args: Array<String>) {
 
                             jobs.forEachIndexed { index, jobStat ->
                                 sb.append(jobStat.toString())
-                                if (index < jobs.size) sb.append(",")
+                                if (index < jobs.size - 1) sb.append(",")
                             }
-                            sb.append("}")
-                            
+                            sb.append("}\r\n")
+
                             output.writeStringUtf8(sb.toString())
                         }
                     }
