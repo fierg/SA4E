@@ -13,18 +13,23 @@ fun main(args: Array<String>) {
         val output = socket.openWriteChannel(autoFlush = true)
 
 
-        output.writeStringUtf8("(\"count\",1,500)\r\n")
-        sleep(3000)
+        handleCount(1,500, output, input)
+        handleCount(500,10000, output, input)
+        handleCount(10000,100000, output, input)
+        handleCount(100000,5000000, output, input)
 
-        var response = input.readUTF8Line()
+
+        output.writeStringUtf8("(\"stats\")\r\n")
+        val response = input.readUTF8Line()
         println("Server said: '$response'")
 
-        sleep(3000)
 
-        response = input.readUTF8Line()
-        println("Server said: '$response'")
-
-
-        //socket.close()
+        socket.awaitClosed()
     }
+}
+
+suspend fun handleCount(from: Int, to: Int, output: ByteWriteChannel, input: ByteReadChannel) {
+    output.writeStringUtf8("(\"count\",$from,$to)\r\n")
+    val response = input.readUTF8Line()
+    println("Server said: '$response'")
 }

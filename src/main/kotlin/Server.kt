@@ -19,7 +19,7 @@ fun main(args: Array<String>) {
         val RGX_STAT = Regex("\\(\\\"stats\\\"\\)")
         val server =
             aSocket(ActorSelectorManager(exec.asCoroutineDispatcher())).tcp().bind(InetSocketAddress("127.0.0.1", 2323))
-        println("Started echo tcp server at ${server.localAddress}")
+        println("Started tcp server at ${server.localAddress}")
 
         while (true) {
             val socket = server.accept()
@@ -38,17 +38,24 @@ fun main(args: Array<String>) {
 
                         if (RGX_JOB.matches(line.toString())) {
                             val groups = RGX_JOB.find(line.toString())!!.groupValues
-                            output.writeStringUtf8("Calculating primes in range ${groups[1]} to ${groups[2]}...\r\n")
+                            //output.writeStringUtf8("Calculating primes in range ${groups[1]} to ${groups[2]}...\r\n")
+                            println("Calculating primes in range ${groups[1]} to ${groups[2]}...")
                             val startTime = System.nanoTime();
                             val primes = getPrimesInRange(groups[1].toInt(), groups[2].toInt())
                             val endTime = System.nanoTime();
 
                             output.writeStringUtf8("${primes}\r\n")
                             jobs.add(JobStat(groups[1].toInt(), groups[2].toInt(), primes, (endTime - startTime)))
-                        } else if (RGX_STAT.matches(line.toString())){
-                            jobs.forEach {
-                                output.writeStringUtf8(it.toString())
+                        } else if (RGX_STAT.matches(line.toString())) {
+                            val sb = StringBuilder("{")
+
+                            jobs.forEachIndexed { index, jobStat ->
+                                sb.append(jobStat.toString())
+                                if (index < jobs.size) sb.append(",")
                             }
+                            sb.append("}")
+                            
+                            output.writeStringUtf8(sb.toString())
                         }
                     }
                 } catch (e: Throwable) {
