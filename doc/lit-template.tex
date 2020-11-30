@@ -1,0 +1,85 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{a4wide}
+\usepackage{url}
+\usepackage{boxedminipage}
+\usepackage{background}
+\usepackage{comment}
+
+% Fuellen Sie die nachfolgenden Platzhalter entsprechend aus.
+\newcommand{\semester}{Wintersemester 2020/21}
+
+\newcommand{\studname}{Alex Pex \& Sven Fiergolla} % Ihr Vor- und Zuname
+
+\newcommand{\matr}{XXX \& 1252732} % Ihre Matrikelnummer
+
+\newcommand{\nr}{1} % Nummer des Themenblocks der Vorlesung
+
+\newcommand{\papertitle}{Ultimate Architecture Enforcement} % Titel des Papiers
+
+\backgroundsetup{
+	scale=.9,
+	angle=0,
+	opacity=.9,
+	position=current page.north west,
+	nodeanchor=north west,
+	hshift=3.4cm,
+	vshift=-2cm,
+	contents={
+		\noindent\parbox[b]{.5\textwidth}{
+			{\large \em Software Architecture 4 Enterprises}\\
+			{\large \em \semester }\\
+			{\large \bf \studname }\\
+			{\large \matr }
+		}\hfill
+		\parbox[b]{.62\textwidth}{\flushright
+			{\large \em Datum: \today} \\
+			{\large \em Übung \nr} \\
+		}
+	},
+	color=black
+}
+
+\begin{document}
+	
+\begin{boxedminipage}[t][17cm][t]{\textwidth}
+	\par{
+	Abgabe auf Github:
+	\url{https://github.com/fierg/SA4E}
+	
+	\medskip
+	
+	Build \& Dependencies:\\
+	./gradle install build\\
+}
+
+	\par{
+
+	
+	Aufgabe 1:\\
+	Starten des Servers über IDE (fun main in Server.kt) und des Clients (fun main in Client.kt)\\
+	Oder über cmd.
+	Client auch über telnet möglich (telnet 127.0.0.1 2323)
+	
+	
+	Lösung in Kotlin und mit der ktor Library.
+
+	\medskip
+}
+
+
+	\par{
+		Aufgabe 2:\\
+		
+		
+	}
+	
+	
+	\par{
+	Aufgabe 3:\\
+	
+}
+	
+\end{boxedminipage}	
+\end{document}
