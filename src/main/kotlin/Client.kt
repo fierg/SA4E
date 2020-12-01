@@ -2,29 +2,47 @@ import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.lang.Thread.sleep
 import java.net.InetSocketAddress
 
 fun main(args: Array<String>) {
+
+    launchPrimeCalculation(1,500)
+    launchPrimeCalculation(500,10000)
+    launchPrimeCalculation(10000,100000)
+    launchPrimeCalculation(100000,500000)
+
+    sleep(30000)
+
     runBlocking {
         val socket = aSocket(ActorSelectorManager(Dispatchers.IO)).tcp().connect(InetSocketAddress("127.0.0.1", 2323))
         val input = socket.openReadChannel()
         val output = socket.openWriteChannel(autoFlush = true)
 
-
-        handleCount(1,500, output, input)
-        handleCount(500,10000, output, input)
-        handleCount(10000,100000, output, input)
-        handleCount(100000,5000000, output, input)
-
-
         output.writeStringUtf8("(\"stats\")\r\n")
         val response = input.readUTF8Line()
         println("Server said: '$response'")
 
-
         socket.awaitClosed()
+    }
+
+
+}
+
+private fun launchPrimeCalculation(from: Int, to: Int) {
+    GlobalScope.launch {
+        runBlocking {
+            val socket =
+                aSocket(ActorSelectorManager(Dispatchers.IO)).tcp().connect(InetSocketAddress("127.0.0.1", 2323))
+            val input = socket.openReadChannel()
+            val output = socket.openWriteChannel(autoFlush = true)
+
+            handleCount(from, to, output, input)
+            socket.awaitClosed()
+        }
     }
 }
 

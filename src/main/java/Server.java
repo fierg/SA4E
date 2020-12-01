@@ -19,8 +19,21 @@ public class Server implements RMIInterface{
     @Override
     public int count(int low, int high) {
         long startTime = System.nanoTime();
+        int counter = getPrimes(low, high);
+        long endTime = System.nanoTime();
+        Job currentJob = new Job();
+        currentJob.count = counter;
+        currentJob.start = low;
+        currentJob.stop = high;
+        currentJob.time = endTime - startTime;
+
+        jobList.add(currentJob);
+        return counter;
+    }
+
+    private int getPrimes(int low, int high) {
         int counter = 0;
-        for (int i = low; i<=high; i++) {
+        for (int i = low; i<= high; i++) {
             if (i == 1 || i == 0)
                 continue;
             int flag = 1;
@@ -35,14 +48,6 @@ public class Server implements RMIInterface{
 
             }
         }
-        long endTime = System.nanoTime();
-        Job currentJob = new Job();
-        currentJob.count = counter;
-        currentJob.start = low;
-        currentJob.stop = high;
-        currentJob.time = endTime - startTime;
-
-        jobList.add(currentJob);
         return counter;
     }
 
