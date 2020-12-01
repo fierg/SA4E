@@ -16,7 +16,7 @@ fun main(args: Array<String>) {
         handleCount(1,500, output, input)
         handleCount(500,10000, output, input)
         handleCount(10000,100000, output, input)
-        handleCount(100000,5000000, output, input)
+        handleCount(100000,500000, output, input)
 
 
         output.writeStringUtf8("(\"stats\")\r\n")

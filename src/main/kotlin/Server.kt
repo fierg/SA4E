@@ -41,7 +41,7 @@ fun main(args: Array<String>) {
                             //output.writeStringUtf8("Calculating primes in range ${groups[1]} to ${groups[2]}...\r\n")
                             println("Calculating primes in range ${groups[1]} to ${groups[2]}...")
                             val startTime = System.nanoTime();
-                            val primes = getPrimesInRange(groups[1].toInt(), groups[2].toInt())
+                            val primes = getPrimes(groups[1].toInt(), groups[2].toInt())
                             val endTime = System.nanoTime();
 
                             output.writeStringUtf8("${primes}\r\n")
@@ -66,6 +66,22 @@ fun main(args: Array<String>) {
             }
         }
     }
+}
+
+private fun getPrimes(low: Int, high: Int): Int {
+    var counter = 0
+    for (i in low..high) {
+        if (i == 1 || i == 0) continue
+        var flag = 1
+        for (j in 1..i / 2) {
+            if (i % j == 0) flag++
+        }
+        //if ()
+        if (flag == 2) {
+            counter++
+        }
+    }
+    return counter
 }
 
 fun getPrimesInRange(start: Int, end: Int): Int {
